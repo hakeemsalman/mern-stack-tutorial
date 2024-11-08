@@ -95,5 +95,99 @@
 
 ## Creating the Database
 
+### SQL vs MongoDB
+
+| Feature                  | SQL (Relational Databases)                            | MongoDB (NoSQL Document Database)             |
+|--------------------------|------------------------------------------------------|-----------------------------------------------|
+| **Data Model**           | Relational, table-based (rows and columns)           | Document-oriented (JSON-like BSON format)     |
+| **Schema**               | Fixed schema, predefined structure                   | Flexible schema, dynamic documents            |
+| **Query Language**       | SQL (Structured Query Language)                      | MongoDB Query Language                        |
+| **ACID Compliance**      | Strong ACID compliance                               | Supports ACID at document level               |
+| **Joins**                | Supports complex joins                               | No joins (joins done within application code) |
+| **Scalability**          | Vertical scalability (scale-up)                      | Horizontal scalability (scale-out)            |
+| **Performance**          | Suited for complex transactions and queries          | Suited for high read/write workloads          |
+| **Storage**              | Row-based storage                                    | Document-based storage                        |
+| **Transactions**         | Supports multi-row, multi-table transactions         | Multi-document transactions (since v4.0)      |
+| **Data Integrity**       | Enforces data integrity with foreign keys, constraints | No strict data integrity enforcement          |
+| **Use Cases**            | Suitable for complex querying, financial systems     | Best for real-time analytics, content management |
+| **Examples**             | MySQL, PostgreSQL, Oracle                            | MongoDB                                       |
+
+### Example: Product
+
+```mermaid
+flowchart LR
+   
+    A[Doument] --> B
+    B[Product]
+    B ---> C[smart watches]
+    B ---> D[Ear buds]
+    B ---> E[Phone]
+```
+
+### Product model
+
 1. Create a file in the this folder `/backend/models/product.model.js`
-2. 
+2. Add this `schema` code into the `product.model.js` file
+   1. ```js
+      import mongoose from "mongoose";
+
+      const productSchema = new mongoose.Schema(
+         {
+            name: {
+               type: String,
+               required: true,
+            },
+            price: {
+               type: Number,
+               required: true,
+            },
+            image: {
+               type: String,
+               required: true,
+            },
+         },
+         {
+            timestamps: true, // createdAt, updatedAt <optional>
+         }
+      );
+
+      const Product = mongoose.model("Product", productSchema);
+
+      export default Product;
+      ```
+3. Now we have to create a API for `post` Product data.
+4. Copy the code from the below and paste into the `server.js` file:
+   1. ```js
+
+      app.use(express.json());                                       // It's a middle ware that parses the request.body into json
+      app.post("/api/products", async (req, res) => {                // best practice to use api/..
+         const product = req.body;                                   // user will send this data
+
+         if (!product.name || !product.price || !product.image) {
+            return res.status(400).json({ success: false, message: "Please provide all fields" });
+         }
+
+         const newProduct = new Product(product);                     // ./models/product.model.js
+
+         try {
+            await newProduct.save();
+            res.status(201).json({ success: true, data: newProduct });
+         } catch (error) {
+            console.error("Error in Create product:", error.message);
+            res.status(500).json({ success: false, message: "Server Error" });
+         }
+      });
+      ```
+5. Try in [Postman](https://www.postman.com/downloads/) for testing purpose.
+   1. Open **Postman**
+   2. use `POST` method
+   3. url: `https://localhost:5000/api/products`
+   4. Select **Body**, then select **raw** and `JSON`
+   5. Copy the code and paste in `body` form script.
+      1. ```json
+         {
+            "name":"Smart Watch"
+            "price":"199.99"
+            "image":"example.com/image"
+         }
+         ```
