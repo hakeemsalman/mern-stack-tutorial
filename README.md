@@ -116,12 +116,21 @@
 
 ```mermaid
 flowchart LR
-   
-    A[Doument] --> B
-    B[Product]
-    B ---> C[smart watches]
-    B ---> D[Ear buds]
-    B ---> E[Phone]
+
+    %% Horizontal layout for A to B connections
+    A[Collection] --> B[Product]
+    B --> C[Smart Watches]
+    B --> D[Ear Buds]
+    B --> E[Phone]
+
+    %% Subgraph for vertical layout (F at the top, with C, D, E below)
+    subgraph VerticalFlow
+        direction TB
+        F[Document]
+        F --> C
+        F --> D
+        F --> E
+    end
 ```
 
 ### Product model
@@ -183,7 +192,7 @@ flowchart LR
    2. use `POST` method
    3. url: `https://localhost:5000/api/products`
    4. Select **Body**, then select **raw** and `JSON`
-   5. Copy the code and paste in `body` form script.
+   5. Copy the code and paste in `body` form editor and then send.
       1. ```json
          {
             "name":"Smart Watch"
@@ -191,3 +200,6 @@ flowchart LR
             "image":"example.com/image"
          }
          ```
+   6. You'll get `success` message. Try with some another messages.
+
+6. 
