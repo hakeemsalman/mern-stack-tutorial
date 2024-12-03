@@ -1,3 +1,5 @@
+> This tutorial made from this [YOUTUBE](https://www.youtube.com/watch?v=Dukz-3mS3Us)
+
 # Roadmap
 
 ## Server Setup
@@ -195,11 +197,12 @@ flowchart LR
    5. Copy the code and paste in `body` form editor and then send.
       1. ```json
          {
-            "name":"Smart Watch"
-            "price":"199.99"
+            "name":"Smart Watch",
+            "price":"199.99",
             "image":"example.com/image"
          }
          ```
-   6. You'll get `success` message. Try with some another messages.
+   6. You'll get `success` message.
+   7. Now try to remove some fields and then send. You would encounter some `400` bad request.
 
 6. 
